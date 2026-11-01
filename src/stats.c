@@ -10,7 +10,7 @@ bool stats_add(Stats *s, const Record *r) {
     if (r->status < 100 || r->status > 599) return false;
     if (s->requests == UINT64_MAX || s->bytes > UINT64_MAX - r->bytes ||
         s->latency_sum > UINT64_MAX - r->latency_us) return false;
-    /* All component counts are <= requests: this preflight makes update atomic. */
+    /* Все частные счётчики <= requests: предварительная проверка делает обновление атомарным. */
     if (s->requests == 0) {
         s->latency_min = s->latency_max = r->latency_us;
         s->first_ms = s->last_ms = r->timestamp_ms;
@@ -28,7 +28,7 @@ bool stats_add(Stats *s, const Record *r) {
 
 bool stats_quantile(const Stats *s, unsigned percentile, Quantile *out) {
     if (s->requests == 0 || percentile == 0 || percentile > 100) return false;
-    /* ceil(n*p/100), avoiding multiplication overflow for uint64 counts. */
+    /* ceil(n*p/100) без переполнения произведения для счётчиков uint64. */
     uint64_t rank = (s->requests / 100) * percentile +
                     ((s->requests % 100) * percentile + 99) / 100;
     uint64_t cumulative = 0;

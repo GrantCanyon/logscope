@@ -46,7 +46,7 @@ const TopEntry *top_find(const Top *t, const char *method, const char *target) {
     return i == LS_NONE ? NULL : &t->entries[i];
 }
 
-/* Stable slot index breaks ties, so replaying a stream is deterministic. */
+/* При равных частотах выбираем по индексу: повтор потока даёт тот же результат. */
 static bool less(const Top *t, size_t a, size_t b) {
     uint64_t x = t->entries[a].count, y = t->entries[b].count;
     return x < y || (x == y && a < b);

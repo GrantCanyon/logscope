@@ -148,7 +148,7 @@ bool report_write(FILE *out, const Analysis *a, const Analysis *b, const Options
     } else {
         fprintf(out, "LogScope %s — отчёт по инциденту\nЗапросы: %" PRIu64 " | 5xx: %" PRIu64 " (%.3f%%) | Байты: %" PRIu64 "\nСтроки: %" PRIu64 " | Отклонено: %" PRIu64 " | Отфильтровано: %" PRIu64 "\n", LS_VERSION, a->stats.requests, a->stats.errors, rate(a->stats.errors,a->stats.requests), a->stats.bytes, a->input.lines, a->input.rejected, a->input.filtered);
         if (a->stats.requests) {
-            fprintf(out, "Задержка: средняя %.3f мкс; min %" PRIu64 "; max %" PRIu64 "\n", (double)a->stats.latency_sum/(double)a->stats.requests, a->stats.latency_min, a->stats.latency_max);
+            fprintf(out, "Задержка: средняя %.3f мкс; минимум %" PRIu64 "; максимум %" PRIu64 "\n", (double)a->stats.latency_sum/(double)a->stats.requests, a->stats.latency_min, a->stats.latency_max);
             const unsigned ps[] = {50,95,99};
             for (size_t j=0; j<3; j++) { Quantile q; if (stats_quantile(&a->stats, ps[j], &q)) fprintf(out,"  p%u в [%" PRIu64 ", %" PRIu64 "] мкс\n",ps[j],q.lower,q.upper); }
         }

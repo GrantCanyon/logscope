@@ -1,4 +1,4 @@
-"""Black-box contracts. Expected numbers come from exact Python counters, not C helpers."""
+"""Сквозные контракты с независимыми эталонными счётчиками Python."""
 import collections
 import json
 import os
@@ -16,12 +16,12 @@ def row(t=0, method="GET", path="/a", status=200, size=10, latency=100):
 
 class CLI(unittest.TestCase):
     def run_cli(self, data="", *args, code=0):
-        self.assertTrue(BIN.is_file(), "LogScope CLI has not been implemented/built")
+        self.assertTrue(BIN.is_file(), "CLI LogScope ещё не реализован или не собран")
         p = subprocess.run([str(BIN), "analyze", "-", "--json", *args], input=data.encode() if isinstance(data, str) else data,
                            capture_output=True, timeout=15)
         self.assertEqual(p.returncode, code, p.stderr.decode(errors="replace"))
         if code:
-            self.assertEqual(p.stdout, b"", "failed analysis must not emit a misleading report")
+            self.assertEqual(p.stdout, b"", "При неудачном анализе stdout должен оставаться пустым")
             return p
         return json.loads(p.stdout)
 
@@ -216,4 +216,3 @@ class Boundaries(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

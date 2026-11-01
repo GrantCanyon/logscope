@@ -1,0 +1,62 @@
+name: Сборка и проверки
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cc: [gcc, clang]
+        sanitize: [false, true]
+    env:
+      CC: ${{ matrix.cc }}
+      PYTHONIOENCODING: utf-8
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Сборка с диагностикой
+        run: |
+          flags=""
+          if [ "${{ matrix.sanitize }}" = "true" ]; then flags="--sanitize"; fi
+          python scripts/build.py $flags
+          python scripts/build.py $flags --unit
+      - name: Модульные и сквозные контракты
+        run: |
+          ./build/unit
+          python -m unittest discover -s tests -v
+      - name: Проверка CMake
+        if: matrix.sanitize == false
+        run: |
+          cmake -S . -B build/cmake -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/cmake --parallel
+          ctest --test-dir build/cmake --output-on-failure
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      CC: clang
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Сборка
+        run: |
+          python scripts/build.py
+          python scripts/build.py --unit
+      - name: Модульные проверки
+        run: ./build/unit
+      - name: Сквозные проверки
+        run: python -m unittest discover -s tests -v

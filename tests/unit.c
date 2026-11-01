@@ -67,11 +67,11 @@ static void top_contract(void) {
 static void window_contract(void) {
     Window w; Record r = {0}; r.status = 503;
     assert(window_init(&w, 3));
-    r.timestamp_ms = 600000; assert(window_add(&w, &r)); /* minute 10 */
-    r.timestamp_ms = 480000; assert(window_add(&w, &r)); /* minute 8 */
-    r.timestamp_ms = 420000; assert(window_add(&w, &r)); /* outside */
+    r.timestamp_ms = 600000; assert(window_add(&w, &r)); /* минута 10 */
+    r.timestamp_ms = 480000; assert(window_add(&w, &r)); /* минута 8 */
+    r.timestamp_ms = 420000; assert(window_add(&w, &r)); /* вне окна */
     assert(w.outside == 1);
-    r.timestamp_ms = 720000; assert(window_add(&w, &r)); /* 12 evicts 8 */
+    r.timestamp_ms = 720000; assert(window_add(&w, &r)); /* минута 12 вытесняет минуту 8 */
     assert(w.evicted == 1);
     assert(w.slots[10 % 3].requests == 1);
     r.timestamp_ms = UINT64_MAX; assert(window_add(&w, &r));
@@ -81,6 +81,6 @@ static void window_contract(void) {
 
 int main(void) {
     parser_contract(); stats_contract(); top_contract(); window_contract();
-    puts("unit: parser, histogram, checked arithmetic, sketch churn, event-time window passed");
+    puts("Модульные проверки пройдены: разбор, гистограмма, арифметика, вытеснения и окно событий");
     return 0;
 }

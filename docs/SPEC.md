@@ -1,52 +1,83 @@
-# LogScope v1 specification
+# LogScope: спецификация v1
 
-A dependency-free C17 command-line investigation tool for synthetic or locally
-supplied HTTP access logs. It reads one pass, never stores input rows, and emits
-human text or a versioned JSON report. No network access at runtime.
+LogScope — инструмент C17 для исследования синтетических или локальных журналов
+HTTP. Один проход, фиксированная память, текстовый отчёт или JSON версии 1.
+Сеть во время работы не используется. Анализатор не хранит исходные строки.
 
-Input is LogScope TSV v1: six ASCII fields, no header, separated by one tab:
-`epoch_ms METHOD request_target status response_bytes latency_us`.
-Unsigned integers have decimal digits only. Timestamp/bytes span uint64; latency
-is at most 86,400,000,000 microseconds (24 h), status 100..599, method 1..16
-uppercase ASCII letters, target 1..2048 visible ASCII characters, starts with /
-or is *. Line limit 8192 bytes excluding LF; CRLF and final unterminated line
-accepted. Embedded NUL, extra/missing columns, signed values, integer overflow,
-control/non-ASCII bytes and overlong fields are rejected. Query stripped for
-endpoint grouping by default; a flag keeps it. No percent decoding or route
-inference. Timestamp is UTC epoch milliseconds; empty input is valid.
+## Входной формат
 
-Lifetime summaries: exact counts/status codes/5xx/bytes/min/max/sum latency;
-quantiles represented by containing power-of-two intervals (not point estimates).
-All uint64 accumulation is checked; arithmetic overflow aborts without a report.
+LogScope TSV v1: шесть ASCII-полей без заголовка, разделённых одной табуляцией:
 
-Top endpoints: two independent fixed-capacity Space-Saving summaries for traffic
-and 5xx. Each row exposes lower=count-error and upper=count. Key includes method.
-All keys exact when distinct count <= capacity; otherwise ranking approximate.
-Dictionary and min-heap occupy O(capacity), updates O(key length + log capacity)
-expected with chaining; adversarial hashing can degrade to O(capacity).
+```text
+epoch_ms METHOD request_target status response_bytes latency_us
+```
 
-Minute window: fixed ring retaining the latest W event-time minute numbers.
-Out-of-order records inside the window update buckets; older records still count
-in lifetime/top summaries but are counted as outside_window. Evictions counted.
-Reported buckets are sorted; empty minutes omitted. No assumption of sorted logs.
-The default W=120, configurable 1..10080. Top capacity default 128, range 1..4096.
-Input-line and read buffers fixed; memory independent of file length/cardinality.
+- Беззнаковые числа состоят только из десятичных цифр; знаки и пробелы запрещены.
+- Время и байты: uint64; задержка: 0..86 400 000 000 мкс (24 часа).
+- HTTP-код: 100..599; метод: 1..16 заглавных ASCII-букв.
+- Цель запроса: 1..2048 видимых ASCII-символов, начинается с `/` либо равна `*`.
+- Строка: до 8192 байт без окончания LF/CRLF; последняя строка может не иметь LF.
+- NUL, лишние/недостающие поля, переполнения, управляющие/не-ASCII символы
+  и слишком длинные поля отклоняются. Завершающий CR удаляется читателем.
+- Время: миллисекунды Unix UTC. Пустой файл корректен.
 
-CLI: analyze INPUT (or - stdin), --baseline FILE, --json, --strict,
---from MS inclusive, --until MS exclusive, --method METHOD, --status MIN:MAX,
---path-prefix PREFIX, --min-latency-us N, --keep-query, --capacity N,
---window-minutes N, --top N, --alert-min-requests N, --alert-rate PERCENT.
-Filters apply identically to incident and baseline; rejected lines counted before
-filtering. Strict mode aborts on first rejected line (line number, no log content).
-Default tolerant mode counts malformed lines by reason, retaining a limited sample
-of line numbers only. File and stdin read errors fatal; output errors fatal.
+По умолчанию query удаляется для группировки конечных точек; `--keep-query`
+сохраняет его. Ключ состоит из метода и цели запроса. Декодирования процентов
+и автоматического определения маршрутов нет. Фильтр префикса работает с исходной
+целью запроса до удаления query.
 
-Baseline comparison: total request ratio (not throughput), error-rate change in
-percentage points, mean latency ratio. Undefined denominators produce null.
-Minute alerts: >= minimum requests AND 5xx rate >= threshold AND (if nonempty
-baseline supplied) >= 3 * baseline rate and >= baseline rate + 5 percentage points.
-These are explainable heuristics, not significance tests or causality claims.
+## Точные агрегаты и приближения
 
-Exit codes: 0 report, 1 CLI usage, 2 IO, 3 invalid strict input or counter overflow.
-JSON version 1; integer values emitted as integers (consumers must preserve uint64).
-No real/private logs; included fixtures and benchmarks entirely synthetic.
+Количество запросов, коды HTTP, 5xx, байты, сумма/минимум/максимум задержек —
+точные uint64. Сложение проверяется; переполнение завершает анализ без отчёта.
+Квантили ближайшего ранга представлены содержащими интервалами степеней двойки,
+а не точечными оценками. Средние, отношения и проценты вычисляются в double.
+
+Два независимых Space-Saving списка фиксированной ёмкости: по всем запросам
+и по 5xx. Каждая запись содержит `lower=count-error`, `upper=count`.
+Если различных ключей не больше ёмкости, границы совпадают. Иначе ранжирование
+приближённое. Непоказанные ключи не считаются отсутствующими.
+
+Хеш-таблица с цепочками и минимальная куча занимают O(capacity). Ожидаемая стоимость
+обновления O(длина ключа + log capacity); специально подобранные коллизии способны
+ухудшить поиск до O(capacity). Функция хеширования не является криптографической.
+
+Кольцо хранит последние W минут по времени событий. Опоздавшие записи внутри окна
+дополняют минуты; более старые входят в общие агрегаты и top, но увеличивают
+`outside_window`. `evicted_requests` — количество запросов в вытесненных корзинах.
+Минуты в отчёте отсортированы; пустые минуты пропущены. Вход не обязан быть
+отсортирован. W по умолчанию 120, диапазон 1..10080; ёмкость top 128, диапазон 1..4096.
+Память зависит от этих параметров, но не от числа входных строк или ключей.
+
+## Командная строка и ошибки
+
+`analyze INPUT` (`-` — stdin), `--baseline FILE`, `--json`, `--strict`,
+`--from MS` включительно, `--until MS` исключительно, `--method METHOD`,
+`--status MIN:MAX`, `--path-prefix PREFIX`, `--min-latency-us N`, `--keep-query`,
+`--capacity N`, `--window-minutes N`, `--top N`, `--alert-min-requests N`,
+`--alert-rate PERCENT`.
+
+Фильтры применяются одновременно и одинаково к обоим периодам. Повреждённые строки
+учитываются до фильтрации. Строгий режим завершается на первой ошибке и сообщает
+номер строки без её содержимого. Обычный режим считает причины и сохраняет
+не более восьми номеров строк. Ошибки чтения и записи фатальны.
+
+Коды завершения: 0 — отчёт, 1 — параметры, 2 — ввод/вывод или память,
+3 — повреждённая строка в строгом режиме либо переполнение. При ошибке анализа
+stdout пуст; при ошибке записи возможен частично записанный отчёт.
+
+## Сравнение и сигналы
+
+Сравниваются отношение общего числа запросов (не пропускная способность),
+разность долей 5xx в процентных пунктах и отношение средних задержек.
+При неопределённом знаменателе выводится null.
+
+Сигнал по минуте: число запросов ≥ минимального объёма (20), доля 5xx ≥ порога
+(10%). Если базовый период содержит запросы, дополнительно доля ≥ 3 × базовой
+и ≥ базовой + 5 процентных пунктов. Это объяснимая эвристика, не статистический
+тест значимости и не доказательство причинности. Сигналы ограничены сохранённым
+окном, тогда как сравнение использует весь принятый поток.
+
+JSON v1 сохраняет целые значения как целые числа. Потребитель обязан поддерживать
+uint64; обычный JavaScript Number для этого недостаточен. HTML-компаньон использует
+целые числа Python и не содержит JavaScript. Все поставляемые примеры синтетические.

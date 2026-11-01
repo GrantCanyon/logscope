@@ -1,7 +1,7 @@
 #include "logscope.h"
 #include <string.h>
 
-/* Locale-independent decimal grammar; strtoull accepts signs and whitespace. */
+/* Десятичная грамматика без locale: strtoull допускает знаки и пробелы. */
 bool parse_u64(const char *text, uint64_t *value) {
     uint64_t n = 0;
     if (*text == '\0') return false;
