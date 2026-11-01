@@ -61,3 +61,15 @@ Linux-only проверка устройства и переносимая пр�
 Локальная проверка CI-исправления: Zig C17 strict CLI/unit собраны; unit pass;
 31 Python-тест — 30 пройдены, /dev/full пропущен как Linux-only. Проверка входного
 каталога на Windows прошла. MSVC CRT и macOS повторно проверит удалённый CI.
+
+Подтверждение удалённого CI — 2 ноября 2026 года (Москва).
+[Запуск 41362192169](https://github.com/GrantCanyon/logscope/actions/runs/41362192169)
+завершился success для точного коммита
+`88bdc5be7d67bcdaff1d764a9a068c7ec538ffa5`.
+Все шесть заданий прошли: Linux GCC/Clang без санитарных проверок и с ASan/UBSan,
+Clang Windows, Clang macOS. В каждом Linux-задании прошли все 31 Python-тест;
+на Windows/macOS — 30 пройдены и один Linux-only /dev/full пропущен.
+Модульные проверки прошли на всех платформах. Два задания CMake (GCC/Clang Linux)
+сообщили 100% tests passed. Данные подтверждены через gh run view и журналы CI.
+Этот факт относится к 88bdc5b; последующие коммиты не объявляются проверенными
+данным запуском. Текущее обновление README/PROGRESS меняет только документацию.
