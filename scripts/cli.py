@@ -1,11 +1,15 @@
 """Общее русское оформление справки и ошибок параметров вспомогательных скриптов."""
+
 import argparse
 import sys
+
 
 class Parser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, add_help=False, **kwargs)
-        self.add_argument("-h", "--help", action="help", help="Показать справку и завершить работу")
+        self.add_argument(
+            "-h", "--help", action="help", help="Показать справку и завершить работу"
+        )
         self._positionals.title = "Позиционные параметры"
         self._optionals.title = "Параметры"
 

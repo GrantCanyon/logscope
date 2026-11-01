@@ -1,0 +1,1209 @@
+{
+  "experiment_schema_version": 1,
+  "measured_at_utc": "2026-11-01T23:39:48.398638+00:00",
+  "environment": {
+    "os": "Windows",
+    "os_release": "11",
+    "architecture": "AMD64",
+    "processor": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+    "logical_cpus": 12,
+    "python": "3.12.14",
+    "compiler": "Zig 0.17.0 cc; C17 -O2 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror",
+    "binary_sha256": "c15ec1a49a4a95727d9af7e1d78866282ac930fc0c7c288ca0ff206e71ed4360"
+  },
+  "parameters": {
+    "requests": 100000,
+    "seed": 2026,
+    "top_k": 10,
+    "cardinalities": [
+      32,
+      256,
+      4096
+    ],
+    "capacities": [
+      16,
+      64,
+      256,
+      1024
+    ],
+    "repeats": 3,
+    "warmup_runs": 1,
+    "window_minutes": 120,
+    "keep_query": false,
+    "synthetic": true,
+    "timing": "отдельный C-процесс: запуск, чтение, анализ и JSON; прогретый кэш",
+    "memory": "пик RSS только C-процесса; Python Counter и генератор исключены"
+  },
+  "datasets": [
+    {
+      "seed": 2026,
+      "requested_cardinality": 32,
+      "input_sha256": "da773b2b0837acf5171f657b0209d03312bdff8cdc0a49408122d6ec03575c68",
+      "input_bytes": 6752661,
+      "truth": {
+        "requests": {
+          "requests": 100000,
+          "distinct_count": 33
+        },
+        "errors": {
+          "requests": 2834,
+          "distinct_count": 33
+        }
+      },
+      "summary": {
+        "requests": 100000,
+        "errors_5xx": 2834,
+        "bytes": 622717026,
+        "latency_sum_us": 4334870440
+      },
+      "execution_order": [
+        {
+          "warmup": true,
+          "round": 0,
+          "capacities": [
+            1024,
+            16,
+            256,
+            64
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "capacities": [
+            1024,
+            64,
+            16,
+            256
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "capacities": [
+            256,
+            1024,
+            64,
+            16
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "capacities": [
+            64,
+            16,
+            256,
+            1024
+          ]
+        }
+      ],
+      "capacities": [
+        {
+          "capacity": 16,
+          "input_sha256": "da773b2b0837acf5171f657b0209d03312bdff8cdc0a49408122d6ec03575c68",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 33,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 4991.5625,
+                "max": 5326
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 17,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.3,
+                "upper": 0.3,
+                "k_effective": 10,
+                "threshold_count": 2541,
+                "mandatory_count": 9,
+                "tied_count": 1,
+                "mandatory_hits": 3,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 33,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 46.9375,
+                "max": 52
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 17,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.5,
+                "upper": 0.5,
+                "k_effective": 10,
+                "threshold_count": 27,
+                "mandatory_count": 9,
+                "tied_count": 3,
+                "mandatory_hits": 5,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.15294770000036806,
+              "peak_rss_bytes": 5296128
+            },
+            {
+              "seconds": 0.139667899988126,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.1352437000023201,
+              "peak_rss_bytes": 5292032
+            }
+          ],
+          "median_seconds": 0.139667899988126,
+          "median_requests_per_second": 715984.1309885922,
+          "peak_rss_bytes": {
+            "min": 5292032,
+            "median": 5292032,
+            "max": 5296128
+          }
+        },
+        {
+          "capacity": 64,
+          "input_sha256": "da773b2b0837acf5171f657b0209d03312bdff8cdc0a49408122d6ec03575c68",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 1.0,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 2541,
+                "mandatory_count": 9,
+                "tied_count": 1,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.9,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 27,
+                "mandatory_count": 9,
+                "tied_count": 3,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.18506869999691844,
+              "peak_rss_bytes": 5296128
+            },
+            {
+              "seconds": 0.13858940001227893,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.1309033999859821,
+              "peak_rss_bytes": 5296128
+            }
+          ],
+          "median_seconds": 0.13858940001227893,
+          "median_requests_per_second": 721555.9053660674,
+          "peak_rss_bytes": {
+            "min": 5292032,
+            "median": 5296128,
+            "max": 5296128
+          }
+        },
+        {
+          "capacity": 256,
+          "input_sha256": "da773b2b0837acf5171f657b0209d03312bdff8cdc0a49408122d6ec03575c68",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 1.0,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 2541,
+                "mandatory_count": 9,
+                "tied_count": 1,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.9,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 27,
+                "mandatory_count": 9,
+                "tied_count": 3,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.14340410000295378,
+              "peak_rss_bytes": 5853184
+            },
+            {
+              "seconds": 0.1422053999849595,
+              "peak_rss_bytes": 5849088
+            },
+            {
+              "seconds": 0.1254356999997981,
+              "peak_rss_bytes": 5853184
+            }
+          ],
+          "median_seconds": 0.1422053999849595,
+          "median_requests_per_second": 703208.1764164835,
+          "peak_rss_bytes": {
+            "min": 5849088,
+            "median": 5853184,
+            "max": 5853184
+          }
+        },
+        {
+          "capacity": 1024,
+          "input_sha256": "da773b2b0837acf5171f657b0209d03312bdff8cdc0a49408122d6ec03575c68",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 1.0,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 2541,
+                "mandatory_count": 9,
+                "tied_count": 1,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 33,
+              "tracked_count": 33,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 33,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.9,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 27,
+                "mandatory_count": 9,
+                "tied_count": 3,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.1949486999947112,
+              "peak_rss_bytes": 5226496
+            },
+            {
+              "seconds": 0.13496180000947788,
+              "peak_rss_bytes": 5246976
+            },
+            {
+              "seconds": 0.13130660000024363,
+              "peak_rss_bytes": 5246976
+            }
+          ],
+          "median_seconds": 0.13496180000947788,
+          "median_requests_per_second": 740950.4022099391,
+          "peak_rss_bytes": {
+            "min": 5226496,
+            "median": 5246976,
+            "max": 5246976
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2026,
+      "requested_cardinality": 256,
+      "input_sha256": "551d4da211139c69a1ca050271361bd0f81931997eab08c7810b88869c48eeba",
+      "input_bytes": 6823267,
+      "truth": {
+        "requests": {
+          "requests": 100000,
+          "distinct_count": 257
+        },
+        "errors": {
+          "requests": 2834,
+          "distinct_count": 247
+        }
+      },
+      "summary": {
+        "requests": 100000,
+        "errors_5xx": 2834,
+        "bytes": 622717026,
+        "latency_sum_us": 4334870440
+      },
+      "execution_order": [
+        {
+          "warmup": true,
+          "round": 0,
+          "capacities": [
+            64,
+            256,
+            1024,
+            16
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "capacities": [
+            256,
+            1024,
+            16,
+            64
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "capacities": [
+            256,
+            1024,
+            16,
+            64
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "capacities": [
+            64,
+            256,
+            1024,
+            16
+          ]
+        }
+      ],
+      "capacities": [
+        {
+          "capacity": 16,
+          "input_sha256": "551d4da211139c69a1ca050271361bd0f81931997eab08c7810b88869c48eeba",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 257,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 4993.3125,
+                "max": 5327
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 241,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 348,
+                "mandatory_count": 9,
+                "tied_count": 2,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 247,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 48.5625,
+                "max": 52
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 231,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.3,
+                "k_effective": 10,
+                "threshold_count": 6,
+                "mandatory_count": 8,
+                "tied_count": 19,
+                "mandatory_hits": 1,
+                "tied_hits": 3,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.18421700000180863,
+              "peak_rss_bytes": 5296128
+            },
+            {
+              "seconds": 0.14642560001811944,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.15926070002024062,
+              "peak_rss_bytes": 5296128
+            }
+          ],
+          "median_seconds": 0.15926070002024062,
+          "median_requests_per_second": 627901.2963480061,
+          "peak_rss_bytes": {
+            "min": 5292032,
+            "median": 5296128,
+            "max": 5296128
+          }
+        },
+        {
+          "capacity": 64,
+          "input_sha256": "551d4da211139c69a1ca050271361bd0f81931997eab08c7810b88869c48eeba",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 257,
+              "tracked_count": 64,
+              "interval_width": {
+                "mean": 1247.125,
+                "max": 1268
+              },
+              "exact_tracked_fraction": 0.015625,
+              "guarantees": {
+                "tracked_checked": 64,
+                "untracked_checked": 193,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 348,
+                "mandatory_count": 9,
+                "tied_count": 2,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 247,
+              "tracked_count": 64,
+              "interval_width": {
+                "mean": 10.859375,
+                "max": 12
+              },
+              "exact_tracked_fraction": 0.015625,
+              "guarantees": {
+                "tracked_checked": 64,
+                "untracked_checked": 183,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.2,
+                "k_effective": 10,
+                "threshold_count": 6,
+                "mandatory_count": 8,
+                "tied_count": 19,
+                "mandatory_hits": 1,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.2690133999858517,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.16100930000538938,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.15926909999689087,
+              "peak_rss_bytes": 5292032
+            }
+          ],
+          "median_seconds": 0.16100930000538938,
+          "median_requests_per_second": 621082.1362284834,
+          "peak_rss_bytes": {
+            "min": 5292032,
+            "median": 5292032,
+            "max": 5292032
+          }
+        },
+        {
+          "capacity": 256,
+          "input_sha256": "551d4da211139c69a1ca050271361bd0f81931997eab08c7810b88869c48eeba",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 257,
+              "tracked_count": 256,
+              "interval_width": {
+                "mean": 25.98828125,
+                "max": 278
+              },
+              "exact_tracked_fraction": 0.8125,
+              "guarantees": {
+                "tracked_checked": 256,
+                "untracked_checked": 1,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.9,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 348,
+                "mandatory_count": 9,
+                "tied_count": 2,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 247,
+              "tracked_count": 247,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 247,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.8,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 6,
+                "mandatory_count": 8,
+                "tied_count": 19,
+                "mandatory_hits": 8,
+                "tied_hits": 2,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.14964789999066852,
+              "peak_rss_bytes": 5853184
+            },
+            {
+              "seconds": 0.2090648000012152,
+              "peak_rss_bytes": 5853184
+            },
+            {
+              "seconds": 0.14765599998645484,
+              "peak_rss_bytes": 5849088
+            }
+          ],
+          "median_seconds": 0.14964789999066852,
+          "median_requests_per_second": 668235.2375558603,
+          "peak_rss_bytes": {
+            "min": 5849088,
+            "median": 5853184,
+            "max": 5853184
+          }
+        },
+        {
+          "capacity": 1024,
+          "input_sha256": "551d4da211139c69a1ca050271361bd0f81931997eab08c7810b88869c48eeba",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 257,
+              "tracked_count": 257,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 257,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.9,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 348,
+                "mandatory_count": 9,
+                "tied_count": 2,
+                "mandatory_hits": 9,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 247,
+              "tracked_count": 247,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 247,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.8,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 6,
+                "mandatory_count": 8,
+                "tied_count": 19,
+                "mandatory_hits": 8,
+                "tied_hits": 2,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.15306549999513663,
+              "peak_rss_bytes": 5926912
+            },
+            {
+              "seconds": 0.16075229999842122,
+              "peak_rss_bytes": 5926912
+            },
+            {
+              "seconds": 0.1599553999840282,
+              "peak_rss_bytes": 5881856
+            }
+          ],
+          "median_seconds": 0.1599553999840282,
+          "median_requests_per_second": 625174.2673894421,
+          "peak_rss_bytes": {
+            "min": 5881856,
+            "median": 5926912,
+            "max": 5926912
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2026,
+      "requested_cardinality": 4096,
+      "input_sha256": "b4e494f4cfabc11c4590c34468a2dcdd03dd1244f0990f4b83e4595651092733",
+      "input_bytes": 6915810,
+      "truth": {
+        "requests": {
+          "requests": 100000,
+          "distinct_count": 4097
+        },
+        "errors": {
+          "requests": 2834,
+          "distinct_count": 716
+        }
+      },
+      "summary": {
+        "requests": 100000,
+        "errors_5xx": 2834,
+        "bytes": 622717026,
+        "latency_sum_us": 4334870440
+      },
+      "execution_order": [
+        {
+          "warmup": true,
+          "round": 0,
+          "capacities": [
+            256,
+            1024,
+            64,
+            16
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 1,
+          "capacities": [
+            16,
+            64,
+            1024,
+            256
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 2,
+          "capacities": [
+            64,
+            16,
+            1024,
+            256
+          ]
+        },
+        {
+          "warmup": false,
+          "round": 3,
+          "capacities": [
+            16,
+            1024,
+            256,
+            64
+          ]
+        }
+      ],
+      "capacities": [
+        {
+          "capacity": 16,
+          "input_sha256": "b4e494f4cfabc11c4590c34468a2dcdd03dd1244f0990f4b83e4595651092733",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 4097,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 4993.375,
+                "max": 5327
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 4081,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 33,
+                "mandatory_count": 8,
+                "tied_count": 7,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 716,
+              "tracked_count": 16,
+              "interval_width": {
+                "mean": 48.5625,
+                "max": 52
+              },
+              "exact_tracked_fraction": 0.0625,
+              "guarantees": {
+                "tracked_checked": 16,
+                "untracked_checked": 700,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.3,
+                "k_effective": 10,
+                "threshold_count": 2,
+                "mandatory_count": 7,
+                "tied_count": 64,
+                "mandatory_hits": 1,
+                "tied_hits": 2,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.1481080999947153,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.13396420000935905,
+              "peak_rss_bytes": 5296128
+            },
+            {
+              "seconds": 0.14022400000249036,
+              "peak_rss_bytes": 5296128
+            }
+          ],
+          "median_seconds": 0.14022400000249036,
+          "median_requests_per_second": 713144.6827805798,
+          "peak_rss_bytes": {
+            "min": 5292032,
+            "median": 5296128,
+            "max": 5296128
+          }
+        },
+        {
+          "capacity": 64,
+          "input_sha256": "b4e494f4cfabc11c4590c34468a2dcdd03dd1244f0990f4b83e4595651092733",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 4097,
+              "tracked_count": 64,
+              "interval_width": {
+                "mean": 1247.578125,
+                "max": 1268
+              },
+              "exact_tracked_fraction": 0.015625,
+              "guarantees": {
+                "tracked_checked": 64,
+                "untracked_checked": 4033,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 33,
+                "mandatory_count": 8,
+                "tied_count": 7,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 716,
+              "tracked_count": 64,
+              "interval_width": {
+                "mean": 11.375,
+                "max": 12
+              },
+              "exact_tracked_fraction": 0.015625,
+              "guarantees": {
+                "tracked_checked": 64,
+                "untracked_checked": 652,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.2,
+                "upper": 0.3,
+                "k_effective": 10,
+                "threshold_count": 2,
+                "mandatory_count": 7,
+                "tied_count": 64,
+                "mandatory_hits": 2,
+                "tied_hits": 1,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.14770639999187551,
+              "peak_rss_bytes": 5292032
+            },
+            {
+              "seconds": 0.1662971000187099,
+              "peak_rss_bytes": 5287936
+            },
+            {
+              "seconds": 0.1252774999884423,
+              "peak_rss_bytes": 5292032
+            }
+          ],
+          "median_seconds": 0.14770639999187551,
+          "median_requests_per_second": 677018.7344996589,
+          "peak_rss_bytes": {
+            "min": 5287936,
+            "median": 5292032,
+            "max": 5292032
+          }
+        },
+        {
+          "capacity": 256,
+          "input_sha256": "b4e494f4cfabc11c4590c34468a2dcdd03dd1244f0990f4b83e4595651092733",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 4097,
+              "tracked_count": 256,
+              "interval_width": {
+                "mean": 311.03515625,
+                "max": 313
+              },
+              "exact_tracked_fraction": 0.00390625,
+              "guarantees": {
+                "tracked_checked": 256,
+                "untracked_checked": 3841,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 33,
+                "mandatory_count": 8,
+                "tied_count": 7,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 716,
+              "tracked_count": 256,
+              "interval_width": {
+                "mean": 2.0078125,
+                "max": 3
+              },
+              "exact_tracked_fraction": 0.00390625,
+              "guarantees": {
+                "tracked_checked": 256,
+                "untracked_checked": 460,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.4,
+                "upper": 0.6,
+                "k_effective": 10,
+                "threshold_count": 2,
+                "mandatory_count": 7,
+                "tied_count": 64,
+                "mandatory_hits": 4,
+                "tied_hits": 2,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.1623544000030961,
+              "peak_rss_bytes": 5853184
+            },
+            {
+              "seconds": 0.1518066999851726,
+              "peak_rss_bytes": 5853184
+            },
+            {
+              "seconds": 0.1563365000183694,
+              "peak_rss_bytes": 5853184
+            }
+          ],
+          "median_seconds": 0.1563365000183694,
+          "median_requests_per_second": 639645.891959012,
+          "peak_rss_bytes": {
+            "min": 5853184,
+            "median": 5853184,
+            "max": 5853184
+          }
+        },
+        {
+          "capacity": 1024,
+          "input_sha256": "b4e494f4cfabc11c4590c34468a2dcdd03dd1244f0990f4b83e4595651092733",
+          "metrics": {
+            "requests": {
+              "requests": 100000,
+              "distinct_count": 4097,
+              "tracked_count": 1024,
+              "interval_width": {
+                "mean": 76.462890625,
+                "max": 77
+              },
+              "exact_tracked_fraction": 0.0009765625,
+              "guarantees": {
+                "tracked_checked": 1024,
+                "untracked_checked": 3073,
+                "violations": 0,
+                "exact_case": false
+              },
+              "recall_at_k": {
+                "lower": 0.1,
+                "upper": 0.1,
+                "k_effective": 10,
+                "threshold_count": 33,
+                "mandatory_count": 8,
+                "tied_count": 7,
+                "mandatory_hits": 1,
+                "tied_hits": 0,
+                "selected_count": 10
+              }
+            },
+            "errors": {
+              "requests": 2834,
+              "distinct_count": 716,
+              "tracked_count": 716,
+              "interval_width": {
+                "mean": 0,
+                "max": 0
+              },
+              "exact_tracked_fraction": 1.0,
+              "guarantees": {
+                "tracked_checked": 716,
+                "untracked_checked": 0,
+                "violations": 0,
+                "exact_case": true
+              },
+              "recall_at_k": {
+                "lower": 0.7,
+                "upper": 1.0,
+                "k_effective": 10,
+                "threshold_count": 2,
+                "mandatory_count": 7,
+                "tied_count": 64,
+                "mandatory_hits": 7,
+                "tied_hits": 3,
+                "selected_count": 10
+              }
+            }
+          },
+          "runs": [
+            {
+              "seconds": 0.15034240001114085,
+              "peak_rss_bytes": 8499200
+            },
+            {
+              "seconds": 0.16995859998860396,
+              "peak_rss_bytes": 8519680
+            },
+            {
+              "seconds": 0.1586525000166148,
+              "peak_rss_bytes": 8556544
+            }
+          ],
+          "median_seconds": 0.1586525000166148,
+          "median_requests_per_second": 630308.3783081109,
+          "peak_rss_bytes": {
+            "min": 8499200,
+            "median": 8519680,
+            "max": 8556544
+          }
+        }
+      ]
+    }
+  ]
+}
