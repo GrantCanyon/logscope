@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import random
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -238,11 +239,13 @@ class Boundaries(unittest.TestCase):
         for value in ["nan", "inf", "-1", "+1", "1e1", "10.", ".1", "10,5", " 1", "100.01"]:
             self.run_cli("", "--alert-rate", value, code=1)
 
-    @unittest.skipIf(os.name == "nt", "Проверка специальных файлов Unix")
-    def test_output_failure_and_input_read_failure(self):
+    @unittest.skipUnless(sys.platform.startswith("linux"), "Устройство /dev/full проверяется только на Linux")
+    def test_output_failure_on_full_device(self):
         with open("/dev/full", "wb") as sink:
             p = subprocess.run([str(BIN), "analyze", "-", "--json"], input=row().encode(), stdout=sink, stderr=subprocess.PIPE)
         self.assertEqual(p.returncode, 2)
+
+    def test_directory_input_is_fatal_without_report(self):
         p = subprocess.run([str(BIN), "analyze", str(ROOT)], capture_output=True)
         self.assertEqual(p.returncode, 2)
         self.assertEqual(p.stdout, b"")

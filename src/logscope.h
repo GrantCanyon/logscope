@@ -1,6 +1,12 @@
 #ifndef LOGSCOPE_H
 #define LOGSCOPE_H
 
+/* Сохраняем стандартные C17 fopen/strcpy вместо непереносимых расширений CRT.
+   Предусловия длины ключей заданы у top_add и проверяются парсером. */
+#if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -50,6 +56,8 @@ typedef struct {
 } Top;
 bool top_init(Top *top, size_t capacity);
 void top_free(Top *top);
+/* method/target: NUL-строки длиной <= LS_METHOD_MAX / LS_TARGET_MAX;
+   вход приложения удовлетворяет этому после parse_record. */
 bool top_add(Top *top, const char *method, const char *target);
 const TopEntry *top_find(const Top *top, const char *method, const char *target);
 

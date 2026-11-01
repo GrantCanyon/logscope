@@ -49,3 +49,15 @@ benchmark-windows.json. Для 1m: медиана 0,751638 с, peak working set 
 8*DBL_EPSILON*max(1,порог) явно описан в SPEC/ARCHITECTURE.
 Чистая копия прежнего 912dc3e успешно собрана и проверена без site-packages;
 отчёт в согласованном внешнем _work/reviews/logscope/CLEAN_CHECK.md.
+
+Первый реальный GitHub Actions запуск 41361912464: все четыре задания Linux
+(GCC/Clang, обычные и ASan/UBSan, включая CMake) прошли. Выявлены платформенные
+ошибки: macOS не имеет Linux-устройства /dev/full; Windows Clang/MSVC CRT считает
+стандартные strcpy/fopen устаревшими при -Werror. Исправление: разделены
+Linux-only проверка устройства и переносимая проверка каталога; для _MSC_VER
+разрешены стандартные API через _CRT_SECURE_NO_WARNINGS с документированными
+пределами копирования. Строгие предупреждения сохранены. Повторный удалённый CI
+должен подтвердить обе платформы; до его завершения успех Windows/macOS не заявляется.
+Локальная проверка CI-исправления: Zig C17 strict CLI/unit собраны; unit pass;
+31 Python-тест — 30 пройдены, /dev/full пропущен как Linux-only. Проверка входного
+каталога на Windows прошла. MSVC CRT и macOS повторно проверит удалённый CI.
