@@ -64,7 +64,7 @@ int analyze_file(Analysis *a, const Options *o, const char *path) {
     size_t used = 0, count;
     bool binary = false, long_line = false, pending = false;
     int result = 0;
-    while ((count = fread(buffer, 1, sizeof buffer, f)) != 0 && result == 0) {
+    while (result == 0 && (count = fread(buffer, 1, sizeof buffer, f)) != 0) {
         for (size_t j = 0; j < count && result == 0; j++) {
             unsigned char c = buffer[j];
             if (c == '\n') {
@@ -83,7 +83,6 @@ int analyze_file(Analysis *a, const Options *o, const char *path) {
     }
     if (result == 0 && ferror(f)) { fputs("Ошибка чтения входного потока.\n", stderr); result = 2; }
     if (result == 0 && pending) {
-        if (used && line[used - 1] == '\r') used--;
         line[used] = '\0';
         result = consume(a, o, line, long_line || used > LS_LINE_MAX ? PARSE_LONG : binary ? PARSE_BINARY : PARSE_OK);
     }

@@ -1,5 +1,6 @@
 #include "app.h"
 #include <inttypes.h>
+#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -102,12 +103,18 @@ static void analysis_report(FILE *out, const Analysis *a, const Options *o, cons
     fputs(",\"window\":", out); window_report(out, &a->window);
     fputc('}', out);
 }
+/* Несколько округлений double не должны превращать точное равенство в отказ.
+   Допуск в процентных пунктах: 8*DBL_EPSILON*max(1, порог), до 5,4e-13. */
+static bool at_least(double actual, double threshold) {
+    double tolerance = 8.0 * DBL_EPSILON * (threshold > 1.0 ? threshold : 1.0);
+    return actual >= threshold || threshold - actual <= tolerance;
+}
 static bool alerted(const Minute *m, const Analysis *b, const Options *o) {
     double r = rate(m->errors, m->requests);
-    if (m->requests < o->alert_min || r < o->alert_rate) return false;
+    if (m->requests < o->alert_min || !at_least(r, o->alert_rate)) return false;
     if (b && b->stats.requests) {
         double br = rate(b->stats.errors, b->stats.requests);
-        if (r < 3 * br || r < br + 5) return false;
+        if (!at_least(r, 3 * br) || !at_least(r, br + 5)) return false;
     }
     return true;
 }

@@ -200,6 +200,39 @@ class Boundaries(unittest.TestCase):
             self.assertEqual(d["baseline"]["input"]["filtered"], 9)
             self.assertEqual(d["comparison"]["request_ratio"], 1)
 
+    def test_strict_rejection_does_not_read_another_block_from_open_stdin(self):
+        p = subprocess.Popen([str(BIN), "analyze", "-", "--json", "--strict"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        try:
+            p.stdin.write(b"bad\n" + b"x" * (65536 - 4))
+            p.stdin.flush()
+            try:
+                code = p.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                self.fail("После первой ошибки процесс повторно ждёт данные из открытого stdin")
+            self.assertEqual(code, 3)
+        finally:
+            p.stdin.close()
+            p.stdin = None
+            out, err = p.communicate(timeout=5)
+        self.assertEqual(out, b"")
+        self.assertIn("строка 1".encode(), err)
+
+    def test_alert_exact_baseline_boundary_survives_rounding(self):
+        with tempfile.TemporaryDirectory(dir=ROOT / "build") as td:
+            baseline = Path(td) / "baseline.tsv"
+            baseline.write_text(row(status=503) + row() * 6)
+            d = self.run_cli(row(status=503) * 9 + row() * 12, "--baseline", str(baseline))
+            self.assertEqual(len(d["alerts"]), 1)
+            d = self.run_cli(row(status=503) * 8 + row() * 13, "--baseline", str(baseline))
+            self.assertEqual(d["alerts"], [])
+
+    def test_bare_carriage_return_at_eof_is_rejected(self):
+        data = row().rstrip("\n") + "\r"
+        self.run_cli(data, "--strict", code=3)
+        result = self.run_cli(data)
+        self.assertEqual(result["incident"]["input"]["rejected"], 1)
+        self.assertEqual(result["incident"]["summary"]["requests"], 0)
+
     def test_decimal_alert_threshold_and_invalid_grammar(self):
         self.assertEqual(len(self.run_cli(row(status=503) * 20, "--alert-rate", "99.99")["alerts"]), 1)
         for value in ["nan", "inf", "-1", "+1", "1e1", "10.", ".1", "10,5", " 1", "100.01"]:
