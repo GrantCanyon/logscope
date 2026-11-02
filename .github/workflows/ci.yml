@@ -60,3 +60,23 @@ jobs:
         run: ./build/unit
       - name: Сквозные проверки
         run: python -m unittest discover -s tests -v
+  nginx-profile:
+    name: Профиль настоящего Nginx
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Сборка C-анализатора
+        run: python scripts/build.py --cc gcc
+      - name: Проверка конфигурации и реального журнала
+        run: python tests/nginx_smoke.py --image nginx:stable-alpine
+      - name: Синтетические свидетельства проверки
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nginx-profile-verification
+          path: build/nginx-smoke
